@@ -1,6 +1,8 @@
+// tests/server.js
 import {setupServer} from 'msw/node'
 import {rest} from 'msw'
 
+// /greeting et /post/:id
 export const handlers = [
   rest.post('/greeting', (req, res, ctx) =>
     res(ctx.json({data: {greeting: `Hello ${req.body.subject}`}})),
@@ -15,6 +17,18 @@ export const handlers = [
       )
     }
     return res(ctx.json({data: req.body}))
+  }),
+  // API submitForm
+  rest.post('/form', (req, res, ctx) => {
+    const {food, drink} = req.body
+    // food et drink
+    if (!food || !drink) {
+      return res(
+        ctx.status(400),
+        ctx.json({message: 'les champs food et drink sont obligatoires'}),
+      )
+    }
+    return res(ctx.json({success: true}))
   }),
 ]
 
